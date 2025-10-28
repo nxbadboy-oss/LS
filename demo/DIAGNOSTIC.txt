@@ -1,0 +1,28 @@
+==============================================
+天汇基金 OFC 平台 - 服务诊断报告
+==============================================
+
+生成时间: $(date)
+
+【服务状态】
+后端服务: 
+{"status":"ok","timestamp":"2025-10-28T09:46:33.784Z"}
+前端服务: 
+HTTP/1.1 200 OK
+
+【进程信息】
+root      1749  0.1  1.0 1053848 148048 ?      Sl   09:41   0:00 node /home/user/LS/demo/backend/node_modules/.bin/tsx watch src/index.ts
+root      1760  0.3  1.2 33120272 170676 ?     Sl   09:41   0:01 /opt/node22/bin/node --require /home/user/LS/demo/backend/node_modules/tsx/dist/preflight.cjs --import file:///home/user/LS/demo/backend/node_modules/tsx/dist/loader.mjs src/index.ts
+root      2194  0.0  0.0  10868  4552 ?        S    09:44   0:00 sh -c vite
+root      2195  1.4  1.6 22369416 218872 ?     Sl   09:44   0:02 node /home/user/LS/demo/frontend/node_modules/.bin/vite
+root      2202  0.9  0.2 731768 32556 ?        Sl   09:44   0:01 /home/user/LS/demo/frontend/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.21.5 --ping
+
+【网络监听】
+
+【访问地址】
+前端应用: http://localhost:5173
+后端 API: http://localhost:3000
+
+【登录账号】
+用户名: lp-001
+密码: 123456

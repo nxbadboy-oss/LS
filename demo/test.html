@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>连接测试</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 600px; 
+            margin: 50px auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .box { 
+            background: white; 
+            padding: 20px; 
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status { 
+            padding: 10px; 
+            border-radius: 4px; 
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #1890ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 5px;
+        }
+        .btn:hover { background: #40a9ff; }
+    </style>
+</head>
+<body>
+    <h1>🎯 天汇基金 OFC 平台 - 连接测试</h1>
+    
+    <div class="box">
+        <h2>服务状态</h2>
+        <div id="backend-status" class="status">检测中...</div>
+        <div id="frontend-status" class="status">检测中...</div>
+    </div>
+
+    <div class="box">
+        <h2>访问应用</h2>
+        <p>如果上面显示服务正常，点击下面的按钮：</p>
+        <a href="http://localhost:5173" class="btn" target="_blank">🚀 打开应用</a>
+        <a href="http://localhost:3000/health" class="btn" target="_blank">🔧 查看 API</a>
+    </div>
+
+    <div class="box">
+        <h2>登录信息</h2>
+        <p><strong>用户名：</strong>lp-001</p>
+        <p><strong>密码：</strong>123456</p>
+    </div>
+
+    <script>
+        // 检测后端
+        fetch('http://localhost:3000/health')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('backend-status').className = 'status success';
+                document.getElementById('backend-status').textContent = '✅ 后端 API 运行正常';
+            })
+            .catch(e => {
+                document.getElementById('backend-status').className = 'status error';
+                document.getElementById('backend-status').textContent = '❌ 后端 API 连接失败';
+            });
+
+        // 检测前端
+        fetch('http://localhost:5173')
+            .then(r => {
+                document.getElementById('frontend-status').className = 'status success';
+                document.getElementById('frontend-status').textContent = '✅ 前端应用运行正常';
+            })
+            .catch(e => {
+                document.getElementById('frontend-status').className = 'status error';
+                document.getElementById('frontend-status').textContent = '❌ 前端应用连接失败';
+            });
+    </script>
+</body>
+</html>
