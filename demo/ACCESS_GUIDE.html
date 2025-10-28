@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天汇基金 OFC 平台 - 访问指南</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .btn {
+            display: inline-block;
+            background: #1890ff;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 10px 5px;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background: #40a9ff;
+        }
+        .status {
+            background: #52c41a;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 5px;
+        }
+        h2 {
+            color: #1890ff;
+        }
+        .demo-accounts {
+            background: white;
+            padding: 15px;
+            border-left: 4px solid #1890ff;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎉 天汇基金 OFC 平台</h1>
+        <p>演示版本已就绪</p>
+    </div>
+
+    <div class="section">
+        <h2>✅ 服务状态</h2>
+        <div class="status">✓ 后端 API: http://localhost:3000</div>
+        <div class="status">✓ 前端应用: http://localhost:5173</div>
+    </div>
+
+    <div class="section">
+        <h2>🌐 访问方式</h2>
+        <p><strong>点击下面的链接访问应用：</strong></p>
+        <a href="http://localhost:5173" class="btn" target="_blank">🚀 打开应用</a>
+        <a href="http://localhost:3000/health" class="btn" target="_blank">🔧 API 健康检查</a>
+    </div>
+
+    <div class="section">
+        <h2>🔐 演示账号</h2>
+
+        <div class="demo-accounts">
+            <h3>LP 投资者（推荐先使用）</h3>
+            <div class="code">
+用户名: lp-001
+密码: 123456
+            </div>
+            <p>登录后可以：查看资产、申购基金、查看持仓、查询交易记录</p>
+        </div>
+
+        <div class="demo-accounts">
+            <h3>GP 管理员</h3>
+            <div class="code">
+用户名: gp-admin
+密码: 123456
+            </div>
+            <p>登录后可以：查看管理概览、管理基金、审核交易</p>
+        </div>
+
+        <div class="demo-accounts">
+            <h3>其他 LP 账号</h3>
+            <div class="code">
+lp-002 / 123456
+lp-003 / 123456
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📱 功能演示流程</h2>
+        <ol>
+            <li><strong>登录系统</strong> - 使用 lp-001 / 123456</li>
+            <li><strong>查看 Dashboard</strong> - 查看总资产、收益曲线、资产配置</li>
+            <li><strong>浏览基金</strong> - 点击"基金列表"，查看 3 只基金</li>
+            <li><strong>体验申购</strong> - 选择基金 → 点击"立即申购" → 输入金额 50000 → 完成</li>
+            <li><strong>查看持仓</strong> - 点击"我的持仓"，查看盈亏数据</li>
+            <li><strong>交易记录</strong> - 查看申购/赎回历史</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>🐛 常见问题</h2>
+
+        <h3>Q: 无法访问 localhost:5173？</h3>
+        <p>A: 如果您在远程服务器上，可能需要：</p>
+        <ul>
+            <li>使用 VSCode 的端口转发功能</li>
+            <li>使用 SSH 隧道: <code>ssh -L 5173:localhost:5173 your-server</code></li>
+            <li>或者配置 nginx 反向代理</li>
+        </ul>
+
+        <h3>Q: 页面显示连接失败？</h3>
+        <p>A: 检查后端服务是否运行：</p>
+        <div class="code">curl http://localhost:3000/health</div>
+
+        <h3>Q: 如何重启服务？</h3>
+        <p>A: 在终端执行：</p>
+        <div class="code">
+cd /home/user/LS/demo/backend
+npm run dev &
+
+cd /home/user/LS/demo/frontend
+npm run dev &
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📊 演示数据</h2>
+        <ul>
+            <li>✅ 3 只基金产品（股票型、债券型、混合型）</li>
+            <li>✅ 90 天净值历史数据</li>
+            <li>✅ 3 个 LP 投资者，每人都有真实持仓</li>
+            <li>✅ 3 笔待处理的申购（GP 可审核）</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🎯 下一步</h2>
+        <p>现在您可以：</p>
+        <ul>
+            <li>🔍 体验完整的申购流程</li>
+            <li>📊 查看数据可视化图表</li>
+            <li>💰 查看持仓和收益分析</li>
+            <li>🛠️ 根据需求定制开发</li>
+        </ul>
+    </div>
+
+    <footer style="text-align: center; margin-top: 50px; color: #999;">
+        <p>天汇基金 OFC 投资人管理平台 - 演示版本</p>
+        <p>技术栈: React 18 + TypeScript + Node.js + Express + SQLite + Ant Design</p>
+    </footer>
+</body>
+</html>
