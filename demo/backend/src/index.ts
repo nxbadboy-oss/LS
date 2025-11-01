@@ -8,6 +8,8 @@ import fundRoutes from './routes/funds';
 import transactionRoutes from './routes/transactions';
 import holdingRoutes from './routes/holdings';
 import dashboardRoutes from './routes/dashboard';
+import fundRelationshipsRoutes from './routes/fund-relationships';
+import approvalsRoutes from './routes/approvals';
 
 dotenv.config();
 
@@ -28,6 +30,8 @@ app.use('/api/funds', fundRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/holdings', holdingRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/fund-relationships', fundRelationshipsRoutes);
+app.use('/api/approvals', approvalsRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

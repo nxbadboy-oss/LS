@@ -4,8 +4,9 @@ package-lock.json
 pnpm-lock.yaml
 yarn.lock
 
-# Database
-database/
+# Database files (but not source code in src/database)
+backend/database/
+frontend/database/
 *.db
 *.db-journal
 

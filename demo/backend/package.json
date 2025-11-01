@@ -9,7 +9,10 @@
     "start": "node dist/index.js",
     "db:init": "tsx src/database/init.ts",
     "db:seed": "tsx src/database/seed.ts",
-    "db:reset": "rm -f database/demo.db && npm run db:init && npm run db:seed"
+    "db:reset": "rm -f database/demo.db && npm run db:init && npm run db:seed",
+    "db:init:v2": "tsx src/database/init-v2.ts",
+    "db:seed:v2": "tsx src/database/seed-v2.ts",
+    "db:upgrade": "rm -f database/demo.db && npm run db:init:v2 && npm run db:seed:v2"
   },
   "keywords": ["fund", "ofc", "demo"],
   "author": "",

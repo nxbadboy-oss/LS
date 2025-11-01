@@ -85,10 +85,34 @@ router.post('/subscriptions', authMiddleware, roleMiddleware('LP_INVESTOR'), asy
 
     // Insert subscription
     const id = randomUUID();
-    db.prepare(`
-      INSERT INTO subscriptions (id, order_number, investor_id, fund_id, subscription_amount, subscription_fee, net_amount, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, 'PENDING')
-    `).run(id, orderNumber, investor.id, fundId, amount, subscriptionFee, netAmount);
+    const approvalId = randomUUID();
+
+    // 使用事务确保数据一致性
+    db.transaction(() => {
+      // 创建申购记录
+      db.prepare(`
+        INSERT INTO subscriptions (id, order_number, investor_id, fund_id, subscription_amount, subscription_fee, net_amount, status, approval_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'PENDING', ?)
+      `).run(id, orderNumber, investor.id, fundId, amount, subscriptionFee, netAmount, approvalId);
+
+      // 创建审批记录
+      db.prepare(`
+        INSERT INTO approvals (id, transaction_id, transaction_type, investor_id, fund_id, amount, status, submitted_by, investor_name, fund_name, priority)
+        VALUES (?, ?, 'SUBSCRIPTION', ?, ?, ?, 'PENDING', ?, ?, ?, 'NORMAL')
+      `).run(approvalId, id, investor.id, fundId, amount, req.user!.id, investor.name, fund.fund_name);
+
+      // 创建通知给投资者
+      db.prepare(`
+        INSERT INTO notifications (id, user_id, title, content, type, category, related_type, related_id)
+        VALUES (?, ?, ?, ?, 'INFO', 'TRANSACTION', 'SUBSCRIPTION', ?)
+      `).run(
+        randomUUID(),
+        req.user!.id,
+        '申购申请已提交',
+        `您的${fund.fund_name}申购申请已提交，等待审批。申购金额：$${amount.toLocaleString()}`,
+        id
+      );
+    })();
 
     res.json({
       success: true,
@@ -98,9 +122,10 @@ router.post('/subscriptions', authMiddleware, roleMiddleware('LP_INVESTOR'), asy
         subscriptionAmount: amount,
         subscriptionFee,
         netAmount,
-        estimatedShares: netAmount / fund.nav
+        estimatedShares: netAmount / fund.nav,
+        approvalId
       },
-      message: 'Subscription submitted successfully'
+      message: 'Subscription submitted successfully and pending approval'
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -262,10 +287,46 @@ router.post('/redemptions', authMiddleware, roleMiddleware('LP_INVESTOR'), async
 
     // Insert redemption
     const id = randomUUID();
-    db.prepare(`
-      INSERT INTO redemptions (id, order_number, investor_id, fund_id, redemption_shares, status)
-      VALUES (?, ?, ?, ?, ?, 'PENDING')
-    `).run(id, orderNumber, investor.id, fundId, shares);
+    const approvalId = randomUUID();
+    const estimatedAmount = shares * fund.nav;
+    const redemptionFee = estimatedAmount * fund.redemption_fee_rate;
+    const netAmount = estimatedAmount - redemptionFee;
+
+    // 使用事务确保数据一致性
+    db.transaction(() => {
+      // 创建赎回记录
+      db.prepare(`
+        INSERT INTO redemptions (id, order_number, investor_id, fund_id, redemption_shares, redemption_amount, redemption_fee, net_amount, nav, status, approval_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?)
+      `).run(id, orderNumber, investor.id, fundId, shares, estimatedAmount, redemptionFee, netAmount, fund.nav, approvalId);
+
+      // 创建审批记录
+      db.prepare(`
+        INSERT INTO approvals (id, transaction_id, transaction_type, investor_id, fund_id, amount, status, submitted_by, investor_name, fund_name, priority)
+        VALUES (?, ?, 'REDEMPTION', ?, ?, ?, 'PENDING', ?, ?, ?, 'NORMAL')
+      `).run(approvalId, id, investor.id, fundId, estimatedAmount, req.user!.id, investor.name, fund.fund_name);
+
+      // 锁定份额
+      db.prepare(`
+        UPDATE holdings
+        SET locked_shares = locked_shares + ?,
+            available_shares = available_shares - ?,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE investor_id = ? AND fund_id = ?
+      `).run(shares, shares, investor.id, fundId);
+
+      // 创建通知给投资者
+      db.prepare(`
+        INSERT INTO notifications (id, user_id, title, content, type, category, related_type, related_id)
+        VALUES (?, ?, ?, ?, 'INFO', 'TRANSACTION', 'REDEMPTION', ?)
+      `).run(
+        randomUUID(),
+        req.user!.id,
+        '赎回申请已提交',
+        `您的${fund.fund_name}赎回申请已提交，等待审批。赎回份额：${shares.toLocaleString()}`,
+        id
+      );
+    })();
 
     res.json({
       success: true,
@@ -273,9 +334,12 @@ router.post('/redemptions', authMiddleware, roleMiddleware('LP_INVESTOR'), async
         id,
         orderNumber,
         redemptionShares: shares,
-        estimatedAmount: shares * fund.nav * (1 - fund.redemption_fee_rate)
+        estimatedAmount,
+        redemptionFee,
+        netAmount,
+        approvalId
       },
-      message: 'Redemption submitted successfully'
+      message: 'Redemption submitted successfully and pending approval'
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
