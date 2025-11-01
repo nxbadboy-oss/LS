@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, Table, Tag, message, Spin, Button, Empty } from 'antd';
 import api from '../services/api';
 import { formatAmount, formatPercent, getFundTypeText } from '../utils/format';
 import type { Holding } from '../types';
 
 export default function Holdings() {
+  const navigate = useNavigate();
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -174,6 +176,21 @@ export default function Holdings() {
                       </span>
                     );
                   },
+                },
+                {
+                  title: '操作',
+                  key: 'action',
+                  render: (_, record) => (
+                    <Button
+                      type="primary"
+                      danger
+                      size="small"
+                      onClick={() => navigate(`/redeem/${record.fund_id}`)}
+                      disabled={(record.available_shares || 0) <= 0}
+                    >
+                      赎回
+                    </Button>
+                  ),
                 },
               ]}
               rowKey="id"

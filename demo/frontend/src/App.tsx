@@ -5,8 +5,10 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import FundList from './pages/FundList';
 import Subscribe from './pages/Subscribe';
+import Redeem from './pages/Redeem';
 import Holdings from './pages/Holdings';
 import Transactions from './pages/Transactions';
+import Approvals from './pages/gp/Approvals';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -60,6 +62,22 @@ function App() {
             element={
               <PrivateRoute>
                 <Transactions />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/redeem/:id"
+            element={
+              <PrivateRoute>
+                <Redeem />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/gp/approvals"
+            element={
+              <PrivateRoute>
+                <Approvals />
               </PrivateRoute>
             }
           />

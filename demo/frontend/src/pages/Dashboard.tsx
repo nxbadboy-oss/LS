@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Card, Row, Col, Statistic, Table, message, Spin } from 'antd';
-import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import api from '../services/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import { formatAmount, formatPercent, getStatusText } from '../utils/format';
@@ -80,7 +79,6 @@ export default function Dashboard() {
                 precision={2}
                 prefix={lpData.summary.totalProfit >= 0 ? '¥+' : '¥'}
                 valueStyle={{ color: lpData.summary.totalProfit >= 0 ? '#3f8600' : '#cf1322' }}
-                prefix={lpData.summary.totalProfit >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
               />
             </Card>
           </Col>
@@ -125,7 +123,7 @@ export default function Dashboard() {
                     outerRadius={80}
                     label={(entry) => `${entry.percentage.toFixed(1)}%`}
                   >
-                    {lpData.assetAllocation.map((entry, index) => (
+                    {lpData.assetAllocation.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>

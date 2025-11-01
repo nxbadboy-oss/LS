@@ -5,7 +5,10 @@ import {
   FundOutlined,
   WalletOutlined,
   TransactionOutlined,
-  LogoutOutlined
+  LogoutOutlined,
+  AuditOutlined,
+  TeamOutlined,
+  
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 
@@ -28,9 +31,15 @@ export default function PrivateRoute({ children }: { children: React.ReactNode }
   };
 
   // 根据当前路径确定选中的菜单项
-  const selectedKey = location.pathname.split('/')[1] || 'dashboard';
+  const pathParts = location.pathname.split('/');
+  const selectedKey = pathParts[pathParts.length - 1] === 'approvals'
+    ? 'approvals'
+    : pathParts[1] || 'dashboard';
 
-  const menuItems: MenuProps['items'] = [
+  // 根据角色显示不同的菜单
+  const isGP = user.role === 'GP_ADMIN' || user.role === 'GP_OPERATOR';
+
+  const lpMenuItems: MenuProps['items'] = [
     {
       key: 'dashboard',
       icon: <DashboardOutlined />,
@@ -56,6 +65,42 @@ export default function PrivateRoute({ children }: { children: React.ReactNode }
       onClick: () => navigate('/transactions'),
     },
   ];
+
+  const gpMenuItems: MenuProps['items'] = [
+    {
+      key: 'dashboard',
+      icon: <DashboardOutlined />,
+      label: '首页',
+      onClick: () => navigate('/dashboard'),
+    },
+    {
+      key: 'approvals',
+      icon: <AuditOutlined />,
+      label: '审批中心',
+      onClick: () => navigate('/gp/approvals'),
+    },
+    {
+      key: 'funds',
+      icon: <FundOutlined />,
+      label: '基金管理',
+      onClick: () => navigate('/funds'),
+    },
+    {
+      key: 'investors',
+      icon: <TeamOutlined />,
+      label: '投资者管理',
+      onClick: () => navigate('/gp/investors'),
+      disabled: true, // 暂未实现
+    },
+    {
+      key: 'transactions',
+      icon: <TransactionOutlined />,
+      label: '交易记录',
+      onClick: () => navigate('/transactions'),
+    },
+  ];
+
+  const menuItems = isGP ? gpMenuItems : lpMenuItems;
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
