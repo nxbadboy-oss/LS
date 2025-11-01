@@ -44,6 +44,37 @@ GP 管理员：
 
 ---
 
+## 🌐 部署到生产环境
+
+### 快速部署（一键脚本）
+
+```bash
+# 运行快速部署脚本
+./quick-deploy.sh
+```
+
+### 部署方案选择
+
+| 方案 | 适用场景 | 部署指南 |
+|------|----------|----------|
+| **Railway** | 推荐！简单快速，免费额度 | [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) |
+| **Docker** | 有自己服务器，完全控制 | [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) |
+| **Vercel + Render** | 前后端分离，高性能 | [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) |
+
+### 部署验证
+
+```bash
+# 运行验证脚本检查部署是否成功
+./verify-deployment.sh
+```
+
+**详细部署指南**：
+- 📖 [完整部署指南](DEPLOYMENT_GUIDE.md) - 多种部署方案对比和详细步骤
+- 🐳 [Docker 部署指南](DOCKER_DEPLOYMENT.md) - 使用 Docker 容器化部署
+- ⚙️ [系统升级说明](UPGRADE_SUMMARY.md) - V2 版本新功能和改进
+
+---
+
 ## 核心功能需求
 
 ### 1. 用户管理模块
